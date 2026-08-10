@@ -36,7 +36,7 @@
             opacity: 1; 
             pointer-events: none;
             background-repeat: repeat;
-            
+            background-position: center center;
         }
 
         /* Barra superior completamente negra y fusionada */
@@ -201,23 +201,27 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === AJUSTES DE TAMAÑO Y CANTIDAD ===
-        const DISTANCIA = 130;  // Distancia entre logos. Número más pequeño = MÁS LOGOS en pantalla.
-        const TAMANO = 0.80;     // Tamaño de cada logo. Número más grande = LOGO MÁS GRANDE.
+        // === AJUSTES DE SIMETRÍA ===
+        const DISTANCIA = 140; // Espacio del bloque del patrón
+        const ESCALA = 0.70;    // Escala de cada logo
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
         
         if (userSvg && userSvg.toLowerCase().includes('<svg')) {
-            const mitad = DISTANCIA / 2;
+            // Posicionamos ambos logos en el centro exacto de sus celdas (25% y 75%)
+            const c1 = DISTANCIA * 0.25;
+            const c2 = DISTANCIA * 0.75;
             
             const patternSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${DISTANCIA}" height="${DISTANCIA}">
                 <defs>
                     <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse">
-                        <g transform="translate(0, 0) scale(${TAMANO})">
+                        <!-- Primer logo: centrado en la celda superior izquierda -->
+                        <g transform="translate(${c1}, ${c1}) scale(${ESCALA}) translate(-50, -50)">
                             ${userSvg}
                         </g>
-                        <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO})">
+                        <!-- Segundo logo: centrado en la celda inferior derecha -->
+                        <g transform="translate(${c2}, ${c2}) scale(${ESCALA}) translate(-50, -50)">
                             ${userSvg}
                         </g>
                     </pattern>
@@ -231,6 +235,7 @@
         }
     });
     </script>
+    
     
 </body>
 </html>
