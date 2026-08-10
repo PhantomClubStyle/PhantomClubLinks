@@ -201,39 +201,49 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === AJUSTES DE TAMAÑO Y ESPACIO ===
-        const DISTANCIA = 140; // Espaciado del mosaico
-        const ESCALA = 1.20;    // Tamaño del logo (al ser más grande, las líneas se ven nítidas y no borrosas)
+        // === CONTROLES DE TAMAÑO Y CANTIDAD ===
+        const DISTANCIA = 140;   // Tamaño del mosaico en pantalla (Menor número = Más logos)
+        const TAMANO_LOGO = 55;  // Tamaño real de cada logo en píxeles
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
-        
+
         if (userSvg && userSvg.toLowerCase().includes('<svg')) {
-            const c1 = DISTANCIA * 0.25;
-            const c2 = DISTANCIA * 0.75;
-            
-            const patternSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${DISTANCIA}" height="${DISTANCIA}">
-                <defs>
-                    <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse">
-                        <g transform="translate(${c1}, ${c1}) scale(${ESCALA}) translate(-50, -50)">
-                            ${userSvg}
-                        </g>
-                        <g transform="translate(${c2}, ${c2}) scale(${ESCALA}) translate(-50, -50)">
-                            ${userSvg}
-                        </g>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#chessLogo)" stroke="none" />
-            </svg>`;
-            
-            const base64Svg = btoa(unescape(encodeURIComponent(patternSvg)));
-            const bgContainer = document.getElementById('fondo-patron');
-            
-            bgContainer.style.backgroundImage = `url("data:image/svg+xml;base64,${base64Svg}")`;
-            bgContainer.style.backgroundSize = `${DISTANCIA}px ${DISTANCIA}px`;
+            // Convertimos el SVG en un objeto de imagen para procesarlo en alta definición
+            const blob = new Blob([userSvg], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+
+            img.onload = function() {
+                // Forzamos renderizado a 3x (Ultra HD para pantallas Retina/OLED)
+                const density = 3;
+                const canvas = document.createElement('canvas');
+                canvas.width = DISTANCIA * density;
+                canvas.height = DISTANCIA * density;
+                const ctx = canvas.getContext('2d');
+
+                // Calculamos posiciones simétricas en ajedrez
+                const pos1 = (DISTANCIA * 0.25) * density;
+                const pos2 = (DISTANCIA * 0.75) * density;
+                const size = TAMANO_LOGO * density;
+
+                // Dibujamos ambos logos en ultra alta resolución
+                ctx.drawImage(img, pos1 - (size / 2), pos1 - (size / 2), size, size);
+                ctx.drawImage(img, pos2 - (size / 2), pos2 - (size / 2), size, size);
+
+                // Inyectamos la imagen HD como fondo
+                const bgContainer = document.getElementById('fondo-patron');
+                bgContainer.style.backgroundImage = `url("${canvas.toDataURL('image/png')}")`;
+                bgContainer.style.backgroundSize = `${DISTANCIA}px ${DISTANCIA}px`;
+
+                URL.revokeObjectURL(url);
+            };
+
+            img.src = url;
         }
     });
     </script>
+    
     
     
     
