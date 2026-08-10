@@ -198,18 +198,17 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === CONTROLES DE ESPACIO Y TAMAÑO ===
-        const SEPARACION_X = 140; // Distancia horizontal entre logos
-        const SEPARACION_Y = 90;  // Distancia vertical entre filas
-        const ESCALA = 0.40;       // Tamaño del logo
+        // === AJUSTES PRINCIPALES (MODIFICA AQUÍ) ===
+        const SEPARACION_X = 120; // Espaciado horizontal entre logos
+        const SEPARACION_Y = 120; // Espaciado vertical entre logos
+        const ESCALA = 0.35;       // Tamaño del logo (sin deformar ni cortar)
 
         const userSvgElem = document.querySelector('#espacio-para-logo svg');
         
         if (userSvgElem) {
             const innerContent = userSvgElem.innerHTML;
             
-            // Calculamos el alto total del bloque patrón (2 filas)
-            const patternW = SEPARACION_X;
+            const patternW = SEPARACION_X * 2;
             const patternH = SEPARACION_Y * 2;
 
             const svgOverlay = document.getElementById('fondo-patron-svg');
@@ -217,12 +216,18 @@
             svgOverlay.innerHTML = `
                 <defs>
                     <pattern id="chessPattern" width="${patternW}" height="${patternH}" patternUnits="userSpaceOnUse" x="50%">
-                        <!-- Fila 1: Centrada -->
-                        <g transform="translate(${patternW * 0.5}, ${SEPARACION_Y * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                        <!-- Fila 1 -->
+                        <g transform="translate(${SEPARACION_X * 0.5}, ${SEPARACION_Y * 0.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
-                        <!-- Fila 2: Intercalada (bordes derecho e izquierdo) -->
+                        <g transform="translate(${SEPARACION_X * 1.5}, ${SEPARACION_Y * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <!-- Fila 2 (Intercalada / Ajedrez) -->
                         <g transform="translate(0, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <g transform="translate(${SEPARACION_X}, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
                         <g transform="translate(${patternW}, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
@@ -235,6 +240,7 @@
         }
     });
     </script>
+    
     
 </body>
 </html>
