@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhantomClub | Links</title>
     
-    <!-- Librería para los íconos (FontAwesome) -->
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+    <!-- Librería para los íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         * {
@@ -25,6 +25,7 @@
             position: relative;
         }
 
+        /* Fondo con patrón de ajedrez y mayor brillo (opacidad 0.35) */
         #fondo-patron {
             position: fixed;
             top: 0;
@@ -32,17 +33,16 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.15;
+            opacity: 0.35; 
             pointer-events: none;
-            background-size: 100px; 
             background-repeat: repeat;
-            background-position: center;
         }
 
+        /* Barra superior completamente negra y fusionada */
         header {
             background-color: #000000;
-            border-bottom: 1px solid #333333;
-            padding: 20px 0;
+            border: none;
+            padding: 25px 0;
             text-align: center;
             width: 100%;
             z-index: 10;
@@ -55,6 +55,7 @@
             text-transform: uppercase;
         }
 
+        /* Contenedor de botones centrado */
         main.links-container {
             flex-grow: 1;
             display: flex;
@@ -68,6 +69,7 @@
             gap: 20px;
         }
 
+        /* Estilo de los botones */
         .link-btn {
             display: flex;
             align-items: center;
@@ -75,7 +77,7 @@
             padding: 18px 25px;
             text-decoration: none;
             color: #ffffff;
-            background-color: transparent;
+            background-color: rgba(0, 0, 0, 0.85); /* Fondo oscuro sutil para que el texto resalte sobre el logo */
             border: 2px solid #ffffff;
             border-radius: 30px;
             transition: all 0.3s ease;
@@ -103,7 +105,7 @@
 </head>
 <body>
 
-    <!-- CAJÓN PARA TU LOGO SVG OCULTO -->
+    <!-- CAJÓN PARA TU LOGO SVG -->
     <div id="espacio-para-logo" style="display: none;">
         
         <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="120" height="120" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style="max-width: 120px; height: auto; display: block; margin: 0 auto;">
@@ -167,7 +169,7 @@
 
     </div>
 
-    <!-- Contenedor donde se mostrará el fondo repetido -->
+    <!-- Contenedor del fondo -->
     <div id="fondo-patron"></div>
 
     <header>
@@ -196,13 +198,29 @@
         </a>
     </main>
 
+    <!-- Script inteligente que crea el patrón en ajedrez -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const svgContainer = document.getElementById('espacio-para-logo');
-            let svgCode = svgContainer.innerHTML.trim();
+            let userSvg = svgContainer.innerHTML.trim();
             
-            if (svgCode && svgCode.toLowerCase().includes('<svg')) {
-                const base64Svg = btoa(unescape(encodeURIComponent(svgCode)));
+            if (userSvg && userSvg.toLowerCase().includes('<svg')) {
+                // Creamos un patrón intercalado (estilo ajedrez/ladrillo)
+                const patternSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+                    <defs>
+                        <pattern id="chessLogo" width="160" height="160" patternUnits="userSpaceOnUse">
+                            <g transform="translate(0, 0) scale(0.35)">
+                                ${userSvg}
+                            </g>
+                            <g transform="translate(80, 80) scale(0.35)">
+                                ${userSvg}
+                            </g>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#chessLogo)" />
+                </svg>`;
+                
+                const base64Svg = btoa(unescape(encodeURIComponent(patternSvg)));
                 const bgContainer = document.getElementById('fondo-patron');
                 bgContainer.style.backgroundImage = `url("data:image/svg+xml;base64,${base64Svg}")`;
             }
