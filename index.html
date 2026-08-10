@@ -198,9 +198,10 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === CONTROLES SIMPLES ===
-        const SPACING = 140; // Distancia entre logos (Sube a 150 para alejarlos más)
-        const ESCALA = 0.20;  // Tamaño del logo (Conserva la nitidez original)
+        // === CONTROLES DE CENTRADO Y ARMONÍA ===
+        const SPACING = 130;   // Ancho del mosaico (140px da simetría ideal en pantallas móviles)
+        const DESFASE_Y = 25;  // Baja el patrón 25px para despejar el título PHANTOMCLUB
+        const ESCALA = 0.20;    // Escala del logo (nitidez intacta)
 
         const userSvgElem = document.querySelector('#espacio-para-logo svg');
         
@@ -219,9 +220,9 @@
                              height="${patternH}" 
                              patternUnits="userSpaceOnUse" 
                              x="50%" 
-                             patternTransform="translate(-${SPACING}, 0)">
+                             patternTransform="translate(-${SPACING}, ${DESFASE_Y})">
                         
-                        <!-- FILA 1: Logo central alineado con el título + bordes empalmados -->
+                        <!-- FILA 1: Logo central perfectamente alineado con el título + bordes -->
                         <g transform="translate(${SPACING}, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
@@ -232,7 +233,7 @@
                             ${innerContent}
                         </g>
 
-                        <!-- FILA 2: Intercalada (Ajedrez sin cortes) -->
+                        <!-- FILA 2: Intercalada (Ajedrez simétrico) -->
                         <g transform="translate(${SPACING * 0.5}, ${SPACING * 1.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
@@ -246,6 +247,7 @@
         }
     });
     </script>
+    
     
     
     
