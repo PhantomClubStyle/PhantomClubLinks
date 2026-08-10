@@ -198,37 +198,45 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === CONTROLES UNIFICADOS ===
-        const SEPARACION = 120; // A mayor número, más distancia entre logos (menos logos en pantalla)
-        const ESCALA = 0.30;    // Tamaño del logo
+        // === CONTROLES SIMPLES ===
+        const SPACING = 130; // Distancia entre logos (Sube a 150 para alejarlos más)
+        const ESCALA = 0.20;  // Tamaño del logo (Conserva la nitidez original)
 
         const userSvgElem = document.querySelector('#espacio-para-logo svg');
         
         if (userSvgElem) {
             const innerContent = userSvgElem.innerHTML;
             
-            const patternSize = SEPARACION * 2;
-            const pos1 = SEPARACION * 0.5;
-            const pos2 = SEPARACION * 1.5;
+            const patternW = SPACING * 2;
+            const patternH = SPACING * 2;
 
             const svgOverlay = document.getElementById('fondo-patron-svg');
             
             svgOverlay.innerHTML = `
                 <defs>
                     <pattern id="chessPattern" 
-                             width="${patternSize}" 
-                             height="${patternSize}" 
+                             width="${patternW}" 
+                             height="${patternH}" 
                              patternUnits="userSpaceOnUse" 
                              x="50%" 
-                             patternTransform="translate(-${pos1}, 0)">
+                             patternTransform="translate(-${SPACING}, 0)">
                         
-                        <!-- Fila 1 (Centrada al medio de la pantalla) -->
-                        <g transform="translate(${pos1}, ${pos1}) scale(${ESCALA}) translate(-50, -50)">
+                        <!-- FILA 1: Logo central alineado con el título + bordes empalmados -->
+                        <g transform="translate(${SPACING}, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <g transform="translate(0, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <g transform="translate(${patternW}, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
 
-                        <!-- Fila 2 (Ajedrez intercalado) -->
-                        <g transform="translate(${pos2}, ${pos2}) scale(${ESCALA}) translate(-50, -50)">
+                        <!-- FILA 2: Intercalada (Ajedrez sin cortes) -->
+                        <g transform="translate(${SPACING * 0.5}, ${SPACING * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <g transform="translate(${SPACING * 1.5}, ${SPACING * 1.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
                     </pattern>
@@ -238,6 +246,7 @@
         }
     });
     </script>
+    
     
     
     
