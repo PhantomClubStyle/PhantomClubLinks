@@ -201,30 +201,33 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === AJUSTES DE SIMETRÍA Y TAMAÑO ===
-        const DISTANCIA = 130; // Espacio del patrón en la pantalla
-        const ESCALA = 1;    // Tamaño visual del logo
+        // === AJUSTES DE TAMAÑO Y ESPACIO ===
+        const DISTANCIA = 140; // Espaciado de la cuadrícula
+        const ESCALA = 0.38;    // Escala del logo (subirla evita líneas de subpíxel)
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
         
         if (userSvg && userSvg.toLowerCase().includes('<svg')) {
-            // Detecta la densidad real de píxeles de la pantalla del teléfono (2x, 3x)
-            const dpi = Math.max(window.devicePixelRatio || 2, 2);
+            const c1 = DISTANCIA * 0.25;
+            const c2 = DISTANCIA * 0.75;
             
-            // Calculamos el lienzo a alta resolución para evitar borrosidad
-            const d = DISTANCIA * dpi;
-            const esc = ESCALA * dpi;
-            const c1 = d * 0.25;
-            const c2 = d * 0.75;
-            
-            const patternSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+            const patternSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${DISTANCIA}" height="${DISTANCIA}">
+                <style>
+                    /* Fuerza bordes definidos y evita que el navegador difumine los trazos en gris */
+                    * {
+                        shape-rendering: crispEdges !important;
+                        vector-effect: non-scaling-stroke !important;
+                        stroke: #ffffff !important;
+                        stroke-width: 1.2px !important;
+                    }
+                </style>
                 <defs>
-                    <pattern id="chessLogo" width="${d}" height="${d}" patternUnits="userSpaceOnUse">
-                        <g transform="translate(${c1}, ${c1}) scale(${esc}) translate(-50, -50)" shape-rendering="geometricPrecision">
+                    <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse">
+                        <g transform="translate(${c1}, ${c1}) scale(${ESCALA}) translate(-50, -50)">
                             ${userSvg}
                         </g>
-                        <g transform="translate(${c2}, ${c2}) scale(${esc}) translate(-50, -50)" shape-rendering="geometricPrecision">
+                        <g transform="translate(${c2}, ${c2}) scale(${ESCALA}) translate(-50, -50)">
                             ${userSvg}
                         </g>
                     </pattern>
@@ -236,11 +239,11 @@
             const bgContainer = document.getElementById('fondo-patron');
             
             bgContainer.style.backgroundImage = `url("data:image/svg+xml;base64,${base64Svg}")`;
-            // Mantiene el tamaño visual exacto pero comprimiendo el doble de píxeles para HD
             bgContainer.style.backgroundSize = `${DISTANCIA}px ${DISTANCIA}px`;
         }
     });
     </script>
+    
     
     
     
