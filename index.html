@@ -198,17 +198,21 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === CONTROLES SIMPLES ===
-        const SPACING = 130; // Distancia entre logos (Sube a 150 para alejarlos más)
-        const ESCALA = 0.20;  // Tamaño del logo (Conserva la nitidez original)
+        // === CONTROLES PRINCIPALES ===
+        const SEPARACION = 130; // Distancia entre logos (sube a 140 o 150 para alejarlos más)
+        const ESCALA = 0.20;     // Tamaño del logo (mantiene nitidez vectorial 100% pura)
 
         const userSvgElem = document.querySelector('#espacio-para-logo svg');
         
         if (userSvgElem) {
             const innerContent = userSvgElem.innerHTML;
             
-            const patternW = SPACING * 2;
-            const patternH = SPACING * 2;
+            // Celda cuadrada perfecta (2x2)
+            const patternW = SEPARACION * 2;
+            const patternH = SEPARACION * 2;
+
+            // Centra la columna de la Fila 1 con el 50% exacto del título en pantalla
+            const centroX = SEPARACION * 0.75;
 
             const svgOverlay = document.getElementById('fondo-patron-svg');
             
@@ -219,24 +223,21 @@
                              height="${patternH}" 
                              patternUnits="userSpaceOnUse" 
                              x="50%" 
-                             patternTransform="translate(-${SPACING}, 0)">
+                             patternTransform="translate(-${centroX}, 0)">
                         
-                        <!-- FILA 1: Logo central alineado con el título + bordes empalmados -->
-                        <g transform="translate(${SPACING}, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                        <!-- FILA 1 (Y = 50% de la celda) -->
+                        <g transform="translate(${SEPARACION * 0.75}, ${SEPARACION * 0.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
-                        <g transform="translate(0, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
-                            ${innerContent}
-                        </g>
-                        <g transform="translate(${patternW}, ${SPACING * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                        <g transform="translate(${SEPARACION * 1.75}, ${SEPARACION * 0.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
 
-                        <!-- FILA 2: Intercalada (Ajedrez sin cortes) -->
-                        <g transform="translate(${SPACING * 0.5}, ${SPACING * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                        <!-- FILA 2 (Y = 150% de la celda - Intercalado simétrico al 25% y 75%) -->
+                        <g transform="translate(${SEPARACION * 0.25}, ${SEPARACION * 1.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
-                        <g transform="translate(${SPACING * 1.5}, ${SPACING * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                        <g transform="translate(${SEPARACION * 1.25}, ${SEPARACION * 1.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
                     </pattern>
@@ -246,6 +247,7 @@
         }
     });
     </script>
+    
     
     
     
