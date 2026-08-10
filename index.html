@@ -198,9 +198,9 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === CONTROLES UNIFICADOS (FÁCILES DE MOVER) ===
-        const DISTANCIA = 170;  // Espacio total entre repeticiones. Sube este número si quieres que estén más separados, bájalo si quieres más juntos.
-        const TAMANO = 0.90;     // El tamaño grande de tu logo.
+        // === AJUSTES DE TAMAÑO Y CANTIDAD ===
+        const DISTANCIA = 140;  // Sube o baja este número para cambiar la separación y evitar que se corten
+        const TAMANO = 0.45;     // Tu tamaño grande del logo
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
@@ -210,18 +210,13 @@
             const svgOverlay = document.getElementById('fondo-patron-svg');
             
             if (svgOverlay) {
-                // Usamos una caja de patrón proporcional al tamaño grande para evitar recortes por completo
                 svgOverlay.innerHTML = `
                     <defs>
                         <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse" x="50%" patternTransform="translate(-${mitad}, 0)">
-                            
-                            <!-- Logo 1: Esquina superior centrada -->
-                            <g transform="translate(0, 0) scale(${TAMANO}) translate(-50, -50)">
+                            <g transform="translate(0, 0) scale(${TAMANO})">
                                 ${userSvg}
                             </g>
-                            
-                            <!-- Logo 2: Centro en diagonal (Ajedrez perfecto) -->
-                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO}) translate(-50, -50)">
+                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO})">
                                 ${userSvg}
                             </g>
                         </pattern>
@@ -232,6 +227,7 @@
         }
     });
     </script>
+    
     
     
     
