@@ -25,24 +25,20 @@
             position: relative;
         }
 
-        /* Fondo con patrón de ajedrez y mayor brillo (opacidad 0.35) */
-        #fondo-patron {
+        /* Capa de fondo SVG Vectorial directa en el DOM */
+        #fondo-patron-svg {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 1; 
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
             pointer-events: none;
-            background-repeat: repeat;
-            background-position: center center;
         }
 
-        /* Barra superior completamente negra y fusionada */
+        /* Barra superior */
         header {
             background-color: #000000;
-            border: none;
             padding: 25px 0;
             text-align: center;
             width: 100%;
@@ -56,7 +52,7 @@
             text-transform: uppercase;
         }
 
-        /* Contenedor de botones centrado */
+        /* Contenedor de botones por encima del fondo */
         main.links-container {
             flex-grow: 1;
             display: flex;
@@ -68,9 +64,10 @@
             margin: 0 auto;
             padding: 20px 25px;
             gap: 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Estilo de los botones */
         .link-btn {
             display: flex;
             align-items: center;
@@ -78,7 +75,7 @@
             padding: 18px 25px;
             text-decoration: none;
             color: #ffffff;
-            background-color: rgba(0, 0, 0, 0.85); /* Fondo oscuro sutil para que el texto resalte sobre el logo */
+            background-color: #000000;
             border: 2px solid #ffffff;
             border-radius: 30px;
             transition: all 0.3s ease;
@@ -170,8 +167,8 @@
 
     </div>
 
-    <!-- Contenedor del fondo -->
-    <div id="fondo-patron"></div>
+    <!-- Elemento SVG Nativo que renderizará el fondo en GPU de alta definición -->
+    <svg id="fondo-patron-svg"></svg>
 
     <header>
         <h1>PhantomClub</h1>
@@ -200,54 +197,38 @@
     </main>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // === CONTROLES DE TAMAÑO Y CANTIDAD ===
-        const DISTANCIA = 140;   // Tamaño del mosaico en pantalla (Menor número = Más logos)
-        const TAMANO_LOGO = 130;  // Tamaño real de cada logo en píxeles
+        document.addEventListener("DOMContentLoaded", function() {
+            // === AJUSTES DE TAMAÑO Y ESPACIO ===
+            const DISTANCIA = 140; // Espaciado del mosaico
+            const ESCALA = 0.42;    // Tamaño del logo
 
-        const svgContainer = document.getElementById('espacio-para-logo');
-        let userSvg = svgContainer.innerHTML.trim();
+            const userSvgElem = document.querySelector('#espacio-para-logo svg');
+            
+            if (userSvgElem) {
+                // Extraemos únicamente el contenido interno de tu vector
+                const innerContent = userSvgElem.innerHTML;
+                
+                const c1 = DISTANCIA * 0.25;
+                const c2 = DISTANCIA * 0.75;
 
-        if (userSvg && userSvg.toLowerCase().includes('<svg')) {
-            // Convertimos el SVG en un objeto de imagen para procesarlo en alta definición
-            const blob = new Blob([userSvg], {type: 'image/svg+xml;charset=utf-8'});
-            const url = URL.createObjectURL(blob);
-            const img = new Image();
-
-            img.onload = function() {
-                // Forzamos renderizado a 3x (Ultra HD para pantallas Retina/OLED)
-                const density = 3;
-                const canvas = document.createElement('canvas');
-                canvas.width = DISTANCIA * density;
-                canvas.height = DISTANCIA * density;
-                const ctx = canvas.getContext('2d');
-
-                // Calculamos posiciones simétricas en ajedrez
-                const pos1 = (DISTANCIA * 0.25) * density;
-                const pos2 = (DISTANCIA * 0.75) * density;
-                const size = TAMANO_LOGO * density;
-
-                // Dibujamos ambos logos en ultra alta resolución
-                ctx.drawImage(img, pos1 - (size / 2), pos1 - (size / 2), size, size);
-                ctx.drawImage(img, pos2 - (size / 2), pos2 - (size / 2), size, size);
-
-                // Inyectamos la imagen HD como fondo
-                const bgContainer = document.getElementById('fondo-patron');
-                bgContainer.style.backgroundImage = `url("${canvas.toDataURL('image/png')}")`;
-                bgContainer.style.backgroundSize = `${DISTANCIA}px ${DISTANCIA}px`;
-
-                URL.revokeObjectURL(url);
-            };
-
-            img.src = url;
-        }
-    });
+                const svgOverlay = document.getElementById('fondo-patron-svg');
+                
+                // Inyectamos el patrón directamente como elemento SVG en el DOM
+                svgOverlay.innerHTML = `
+                    <defs>
+                        <pattern id="chessPattern" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse" x="50%">
+                            <g transform="translate(${c1}, ${c1}) scale(${ESCALA}) translate(-50, -50)">
+                                ${innerContent}
+                            </g>
+                            <g transform="translate(${c2}, ${c2}) scale(${ESCALA}) translate(-50, -50)">
+                                ${innerContent}
+                            </g>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#chessPattern)" />
+                `;
+            }
+        });
     </script>
-    
-    
-    
-    
-    
-    
 </body>
 </html>
