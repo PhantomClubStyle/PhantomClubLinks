@@ -199,9 +199,9 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // === AJUSTES PRINCIPALES ===
-        const SEPARACION_X = 100; // Espaciado horizontal entre logos
-        const SEPARACION_Y = 100; // Espaciado vertical entre logos
-        const ESCALA = 0.20;       // Tamaño del logo (mantiene la nitidez alta)
+        const SEPARACION_X = 100; // Espaciado horizontal
+        const SEPARACION_Y = 100; // Espaciado vertical
+        const ESCALA = 0.20;       // Tamaño del logo
 
         const userSvgElem = document.querySelector('#espacio-para-logo svg');
         
@@ -221,12 +221,23 @@
                              patternUnits="userSpaceOnUse" 
                              x="50%" 
                              patternTransform="translate(-${SEPARACION_X}, 0)">
-                        <!-- Fila 1 (Logo alineado al centro de pantalla) -->
+                        
+                        <!-- FILA 1 (Arriba) -->
                         <g transform="translate(${SEPARACION_X * 0.5}, ${SEPARACION_Y * 0.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
-                        <!-- Fila 2 (Intercalada / Ajedrez sin tocar bordes) -->
-                        <g transform="translate(${SEPARACION_X * 1.5}, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                        <g transform="translate(${SEPARACION_X * 1.5}, ${SEPARACION_Y * 0.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+
+                        <!-- FILA 2 (Abajo - Intercalada con empalme continuo) -->
+                        <g transform="translate(${SEPARACION_X}, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <g transform="translate(0, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
+                            ${innerContent}
+                        </g>
+                        <g transform="translate(${patternW}, ${SEPARACION_Y * 1.5}) scale(${ESCALA}) translate(-50, -50)">
                             ${innerContent}
                         </g>
                     </pattern>
@@ -235,7 +246,8 @@
             `;
         }
     });
-        </script>
+    </script>
+    
     
     
     
