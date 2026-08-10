@@ -199,8 +199,8 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // === CONTROLES EXACTOS QUE QUERÍAS ===
-        const DISTANCIA = 150;  // Distancia entre logos (Menor número = más logos)
-        const TAMANO = 0.25;     // Tamaño del logo (Mayor número = más grande)
+        const DISTANCIA = 130;  // Distancia entre logos (Menor número = más logos)
+        const TAMANO = 0.20;     // Tamaño del logo (Mayor número = más grande)
 
         const userSvgElem = document.querySelector('#espacio-para-logo svg');
         
@@ -209,7 +209,7 @@
             
             // Mosaico cuadriculado exacto basado en tu distancia
             const patternSize = DISTANCIA;
-            const mitad = DISTANCIA / 1;
+            const mitad = DISTANCIA / 2;
             
             // Centrado automático al 50% de la pantalla
             const centroX = mitad;
