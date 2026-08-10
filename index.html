@@ -202,8 +202,8 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // === AJUSTES DE TAMAÑO Y ESPACIO ===
-        const DISTANCIA = 140; // Espaciado de la cuadrícula
-        const ESCALA = 0.38;    // Escala del logo (subirla evita líneas de subpíxel)
+        const DISTANCIA = 130; // Espaciado del mosaico
+        const ESCALA = 1;    // Tamaño del logo (al ser más grande, las líneas se ven nítidas y no borrosas)
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
@@ -213,15 +213,6 @@
             const c2 = DISTANCIA * 0.75;
             
             const patternSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${DISTANCIA}" height="${DISTANCIA}">
-                <style>
-                    /* Fuerza bordes definidos y evita que el navegador difumine los trazos en gris */
-                    * {
-                        shape-rendering: crispEdges !important;
-                        vector-effect: non-scaling-stroke !important;
-                        stroke: #ffffff !important;
-                        stroke-width: 1.2px !important;
-                    }
-                </style>
                 <defs>
                     <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse">
                         <g transform="translate(${c1}, ${c1}) scale(${ESCALA}) translate(-50, -50)">
@@ -232,7 +223,7 @@
                         </g>
                     </pattern>
                 </defs>
-                <rect width="100%" height="100%" fill="url(#chessLogo)" />
+                <rect width="100%" height="100%" fill="url(#chessLogo)" stroke="none" />
             </svg>`;
             
             const base64Svg = btoa(unescape(encodeURIComponent(patternSvg)));
@@ -243,6 +234,7 @@
         }
     });
     </script>
+    
     
     
     
