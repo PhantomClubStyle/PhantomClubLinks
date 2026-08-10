@@ -198,10 +198,9 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === AJUSTES FINALES ===
-        const DISTANCIA = 190;     // Distancia entre los logos (repetición del patrón)
-        const TAMANO = 0.90;        // El tamaño grande de tu logo
-        const CAJA_RECORTE = 100;   // <--- AQUÍ CONFIGURAS LA CAJA INVISIBLE: A mayor número, más grande es el área de seguridad para que el logo nunca se corte en los bordes.
+        // === CONTROLES UNIFICADOS (FÁCILES DE MOVER) ===
+        const DISTANCIA = 220;  // Espacio total entre repeticiones. Sube este número si quieres que estén más separados, bájalo si quieres más juntos.
+        const TAMANO = 0.45;     // El tamaño grande de tu logo.
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
@@ -211,18 +210,18 @@
             const svgOverlay = document.getElementById('fondo-patron-svg');
             
             if (svgOverlay) {
+                // Usamos una caja de patrón proporcional al tamaño grande para evitar recortes por completo
                 svgOverlay.innerHTML = `
                     <defs>
-                        <!-- La caja invisible ahora mide CAJA_RECORTE x CAJA_RECORTE para dar espacio libre al logo grande -->
-                        <pattern id="chessLogo" width="${CAJA_RECORTE}" height="${CAJA_RECORTE}" patternUnits="userSpaceOnUse" x="50%" patternTransform="translate(-${CAJA_RECORTE / 2}, 0)">
+                        <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse" x="50%" patternTransform="translate(-${mitad}, 0)">
                             
-                            <!-- Logo 1 (Esquina superior/origen) centrado -->
+                            <!-- Logo 1: Esquina superior centrada -->
                             <g transform="translate(0, 0) scale(${TAMANO}) translate(-50, -50)">
                                 ${userSvg}
                             </g>
                             
-                            <!-- Logo 2 (Intercalado en ajedrez) usando tu misma distancia -->
-                            <g transform="translate(${DISTANCIA}, ${DISTANCIA}) scale(${TAMANO}) translate(-50, -50)">
+                            <!-- Logo 2: Centro en diagonal (Ajedrez perfecto) -->
+                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO}) translate(-50, -50)">
                                 ${userSvg}
                             </g>
                         </pattern>
@@ -233,6 +232,7 @@
         }
     });
     </script>
+    
     
     
     
