@@ -198,60 +198,36 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // === TUS AJUSTES ORIGINALES ===
-        const DISTANCIA = 100; // Ajusta el espacio (110 - 130 suele verse ideal)
-        const TAMANO = 0.45;    // Escala del logo para este método vectorial (0.20 - 0.30)
+        // === AJUSTES DE TAMAÑO Y CANTIDAD ===
+        const DISTANCIA = 100;  // Distancia entre logos. Número más pequeño = MÁS LOGOS en pantalla.
+        const TAMANO = 0.45;     // Tamaño de cada logo. Número más grande = LOGO MÁS GRANDE.
 
-        const userSvgElem = document.querySelector('#espacio-para-logo svg');
+        const svgContainer = document.getElementById('espacio-para-logo');
+        let userSvg = svgContainer.innerHTML.trim();
         
-        if (userSvgElem) {
-            const innerContent = userSvgElem.innerHTML;
-            
-            // Mosaico doble para permitir el patrón en ajedrez continuo
-            const patternW = DISTANCIA * 2;
-            const patternH = DISTANCIA * 2;
-
-            // Alineación del eje central a la pantalla (50%)
-            const centroX = DISTANCIA * 0.5;
-
+        if (userSvg && userSvg.toLowerCase().includes('<svg')) {
+            const mitad = DISTANCIA / 2;
             const svgOverlay = document.getElementById('fondo-patron-svg');
             
             if (svgOverlay) {
                 svgOverlay.innerHTML = `
                     <defs>
-                        <pattern id="chessPattern" 
-                                 width="${patternW}" 
-                                 height="${patternH}" 
-                                 patternUnits="userSpaceOnUse" 
-                                 x="50%" 
-                                 patternTransform="translate(-${centroX}, 0)">
-                            
-                            <!-- FILA 1 (Logo en el centro exacto + bordes alineados) -->
-                            <g transform="translate(${DISTANCIA}, ${DISTANCIA * 0.5}) scale(${TAMANO}) translate(-50, -50)">
-                                ${innerContent}
+                        <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse" x="50%" patternTransform="translate(-${mitad}, 0)">
+                            <g transform="translate(0, 0) scale(${TAMANO})">
+                                ${userSvg}
                             </g>
-                            <g transform="translate(0, ${DISTANCIA * 0.5}) scale(${TAMANO}) translate(-50, -50)">
-                                ${innerContent}
-                            </g>
-                            <g transform="translate(${patternW}, ${DISTANCIA * 0.5}) scale(${TAMANO}) translate(-50, -50)">
-                                ${innerContent}
-                            </g>
-
-                            <!-- FILA 2 (Ajedrez intercalado sin toques en los bordes) -->
-                            <g transform="translate(${DISTANCIA * 0.5}, ${DISTANCIA * 1.5}) scale(${TAMANO}) translate(-50, -50)">
-                                ${innerContent}
-                            </g>
-                            <g transform="translate(${DISTANCIA * 1.5}, ${DISTANCIA * 1.5}) scale(${TAMANO}) translate(-50, -50)">
-                                ${innerContent}
+                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO})">
+                                ${userSvg}
                             </g>
                         </pattern>
                     </defs>
-                    <rect width="100%" height="100%" fill="url(#chessPattern)" />
+                    <rect width="100%" height="100%" fill="url(#chessLogo)" />
                 `;
             }
         }
     });
     </script>
+    
     
     
     
