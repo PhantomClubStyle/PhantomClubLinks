@@ -199,8 +199,8 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // === AJUSTES DE TAMAÑO Y CANTIDAD ===
-        const DISTANCIA = 130;  // Distancia entre logos. Número más pequeño = MÁS LOGOS en pantalla.
-        const TAMANO = 1;     // Tamaño de cada logo. Número más grande = LOGO MÁS GRANDE.
+        const DISTANCIA = 150;  // Subí un poco la distancia (130-150) para que logos grandes de 0.45 tengan aire y no choquen
+        const TAMANO = 0.45;     // Tu tamaño grande deseado
 
         const svgContainer = document.getElementById('espacio-para-logo');
         let userSvg = svgContainer.innerHTML.trim();
@@ -213,10 +213,11 @@
                 svgOverlay.innerHTML = `
                     <defs>
                         <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse" x="50%" patternTransform="translate(-${mitad}, 0)">
-                            <g transform="translate(0, 0) scale(${TAMANO})">
+                            <!-- Añadido translate(-50, -50) para que crezcan desde su centro exacto -->
+                            <g transform="translate(0, 0) scale(${TAMANO}) translate(-50, -50)">
                                 ${userSvg}
                             </g>
-                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO})">
+                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO}) translate(-50, -50)">
                                 ${userSvg}
                             </g>
                         </pattern>
@@ -227,6 +228,7 @@
         }
     });
     </script>
+    
     
     
     
