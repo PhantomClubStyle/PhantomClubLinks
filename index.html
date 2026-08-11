@@ -156,4 +156,90 @@
     <path d="M2431 2654 c0 -11 3 -14 6 -6 3 7 2 16 -1 19 -3 4 -6 -2 -5 -13z"/>
     <path d="M3620 2650 c0 -5 7 -10 15 -10 8 0 15 5 15 10 0 6 -7 10 -15 10 -8 0 -15 -4 -15 -10z"/>
     <path d="M2390 2630 c0 -5 5 -10 10 -10 6 0 10 5 10 10 0 6 -4 10 -10 10 -5 0 -10 -4 -10 -10z"/>
-    <path d="M2440 2610 c0 -
+     <path d="M2440 2610 c0 -5 5 -10 10 -10 6 0 10 5 10 10 0 6 -4 10 -10 10 -5 0 -10 -4 -10 -10z"/>
+    <path d="M3560 2610 c0 -5 5 -10 10 -10 6 0 10 5 10 10 0 6 -4 10 -10 10 -5 0 -10 -4 -10 -10z"/>
+    <path d="M2260 2526 c0 -24 12 -46 21 -40 15 9 10 54 -6 54 -8 0 -15 -6 -15 -14z"/>
+    <path d="M3644 2489 c-8 -14 11 -33 25 -25 16 10 13 36 -3 36 -8 0 -18 -5 -22 -11z"/>
+    <path d="M3633 2417 c0 -7 9 -13 19 -13 10 0 18 1 18 3 0 1 -8 7 -18 12 -13 7 -19 6 -19 -2z"/>
+    <path d="M2850 2231 c-17 -33 23 -111 58 -111 15 0 14 4 -9 93 -11 40 -32 48 -49 18z"/>
+  </g>
+        </svg>
+
+    </div>
+
+    <!-- Elemento SVG Nativo que renderizará el fondo en GPU de alta definición -->
+    <svg id="fondo-patron-svg"></svg>
+
+    <header>
+        <h1>PhantomClub</h1>
+    </header>
+
+    <main class="links-container">
+        <a href="https://phantomclubstyle.github.io/PhantomClub/#" class="link-btn">
+            <i class="fa-solid fa-book-open"></i>
+            <span>Catálogo</span>
+        </a>
+
+        <a href="https://wa.me/4128705612?text=Hola! Quisiera mas información sobre sus piezas!" class="link-btn">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp</span>
+        </a>
+
+        <a href="https://www.instagram.com/phantomclubs?igsh=MW1sZjZyOTlxNnRoOQ==" class="link-btn">
+            <i class="fa-brands fa-instagram"></i>
+            <span>Instagram</span>
+        </a>
+
+        <a href="https://www.tiktok.com/@phantomcaps_?_r=1&_t=ZS-98lE5LS3vzZ" class="link-btn">
+            <i class="fa-brands fa-tiktok"></i>
+            <span>TikTok</span>
+        </a>
+    </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // === AJUSTES DE TAMAÑO Y CANTIDAD ===
+        const DISTANCIA = 140;  // Sube o baja este número para cambiar la separación y evitar que se corten
+        const TAMANO = 0.45;     // Tu tamaño grande del logo
+
+        const svgContainer = document.getElementById('espacio-para-logo');
+        let userSvg = svgContainer.innerHTML.trim();
+        
+        if (userSvg && userSvg.toLowerCase().includes('<svg')) {
+            const mitad = DISTANCIA / 2;
+            const svgOverlay = document.getElementById('fondo-patron-svg');
+            
+            if (svgOverlay) {
+                svgOverlay.innerHTML = `
+                    <defs>
+                        <pattern id="chessLogo" width="${DISTANCIA}" height="${DISTANCIA}" patternUnits="userSpaceOnUse" x="50%" patternTransform="translate(-${mitad}, 0)">
+                            <g transform="translate(0, 0) scale(${TAMANO})">
+                                ${userSvg}
+                            </g>
+                            <g transform="translate(${mitad}, ${mitad}) scale(${TAMANO})">
+                                ${userSvg}
+                            </g>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#chessLogo)" />
+                `;
+            }
+        }
+    });
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</body>
+</html>
