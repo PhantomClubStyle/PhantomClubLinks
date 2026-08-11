@@ -2,106 +2,249 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inventario Phantom Club</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Inventario - Gorras</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #e0e0e0; padding: 20px; }
-        .resumen { display: flex; gap: 20px; margin-bottom: 20px; }
-        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; flex: 1; text-align: center; }
-        table { width: 100%; border-collapse: collapse; background: #1e1e1e; }
-        th, td { padding: 12px; border: 1px solid #333; text-align: center; }
-        button { background: #2e7d32; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
-        .btn-venta { background: #1976d2; }
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        h2 { text-align: center; color: #fff; }
+        .form-container, .stats-container {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+        .stat-box {
+            background: #252525;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .stat-box h3 { margin: 0; font-size: 15px; color: #4CAF50; }
+        .stat-box p { margin: 5px 0 0; font-size: 11px; color: #aaa; }
+        label { display: block; margin-top: 10px; font-size: 14px; color: #bbb; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover { background: #388e3c; }
+        .table-container {
+            max-width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2c2c2c;
+        }
+        th { background: #252525; color: #fff; }
+        .btn-action {
+            padding: 6px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: white;
+        }
+        .btn-sell { background: #f57c00; }
+        .btn-sell:hover { background: #fb8c00; }
+        .btn-delete { background: #d32f2f; }
+        .btn-delete:hover { background: #e53935; }
+        .ganancia-text { color: #4CAF50; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<h1>Control de Stock Phantom Club</h1>
+    <h2>Control de Inventario - Gorras</h2>
 
-<div class="resumen">
-    <div class="card">Total Invertido: <span id="total-usdt">0</span> USDT</div>
-    <div class="card">Stock Total: <span id="total-piezas">0</span> piezas</div>
-</div>
+    <!-- Panel de Resumen con los dos apartados de dinero + stock -->
+    <div class="stats-container">
+        <div class="stat-box">
+            <h3 id="totalVentasReal">0.00</h3>
+            <p>Total Vendido</p>
+        </div>
+        <div class="stat-box">
+            <h3 id="totalGananciaReal">0.00</h3>
+            <p>Ganancias</p>
+        </div>
+        <div class="stat-box">
+            <h3 id="totalGorras">0</h3>
+            <p>En Stock</p>
+        </div>
+    </div>
 
-<div class="card" style="margin-bottom: 20px;">
-    <input type="text" id="modelo" placeholder="Modelo">
-    <input type="number" id="cantidad" placeholder="Cantidad inicial" value="1">
-    <input type="number" id="costo" placeholder="Costo Unitario (USDT)">
-    <button onclick="agregarLote()">Agregar Lote</button>
-</div>
+    <!-- Formulario para agregar gorras -->
+    <div class="form-container">
+        <form id="inventoryForm">
+            <label>Modelo / Nombre</label>
+            <input type="text" id="nombre" placeholder="Ej: DandyHats Sadboys" required>
 
-<table>
-    <thead>
-        <tr>
-            <th>Modelo</th>
-            <th>Costo U.</th>
-            <th>Inicial</th>
-            <th>Vendidos</th>
-            <th>Stock Actual</th>
-            <th>Total Invertido</th>
-            <th>Acción</th>
-        </tr>
-    </thead>
-    <tbody id="tabla-cuerpo"></tbody>
-</table>
+            <label>Stock / Cantidad</label>
+            <input type="number" id="stock" value="1" min="1" required>
 
-<script>
-    let inventario = JSON.parse(localStorage.getItem('inventario_gorras')) || [];
+            <label>Costo de Compra (USDT)</label>
+            <input type="number" id="costo" step="0.01" placeholder="23" required>
 
-    function agregarLote() {
-        const modelo = document.getElementById('modelo').value;
-        const inicial = parseInt(document.getElementById('cantidad').value);
-        const costo = parseFloat(document.getElementById('costo').value);
+            <label>Precio de Venta (USDT)</label>
+            <input type="number" id="usdtVenta" step="0.01" placeholder="38" required>
 
-        if(!modelo || !inicial || !costo) return alert("Completa los datos");
+            <button type="submit">Agregar Gorra</button>
+        </form>
+    </div>
 
-        inventario.push({ id: Date.now(), modelo, inicial, vendidos: 0, costo });
-        guardar();
-    }
-
-    function registrarVenta(id) {
-        const item = inventario.find(i => i.id === id);
-        if(item.vendidos < item.inicial) {
-            item.vendidos++;
-            guardar();
-        } else {
-            alert("No hay más stock");
-        }
-    }
-
-    function guardar() {
-        localStorage.setItem('inventario_gorras', JSON.stringify(inventario));
-        renderizar();
-    }
-
-    function renderizar() {
-        const cuerpo = document.getElementById('tabla-cuerpo');
-        cuerpo.innerHTML = '';
-        let totalUSDT = 0;
-        let totalStock = 0;
-
-        inventario.forEach(item => {
-            const stockActual = item.inicial - item.vendidos;
-            const inversionLote = item.inicial * item.costo;
-            totalUSDT += inversionLote;
-            totalStock += stockActual;
-
-            cuerpo.innerHTML += `
+    <!-- Tabla de Inventario -->
+    <div class="table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td>${item.modelo}</td>
-                    <td>${item.costo}</td>
-                    <td>${item.inicial}</td>
-                    <td>${item.vendidos}</td>
-                    <td>${stockActual}</td>
-                    <td>${inversionLote} USDT</td>
-                    <td><button class="btn-venta" onclick="registrarVenta(${item.id})">Vender 1</button></td>
+                    <th>Stock</th>
+                    <th>Modelo</th>
+                    <th>Costo</th>
+                    <th>Venta</th>
+                    <th>Ganancia Unit.</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
-            `;
-        });
-        document.getElementById('total-usdt').innerText = totalUSDT;
-        document.getElementById('total-piezas').innerText = totalStock;
-    }
+            </thead>
+            <tbody id="tablaInventario">
+                <!-- Los datos se cargan dinámicamente -->
+            </tbody>
+        </table>
+    </div>
 
-    renderizar();
-</script>
+    <script>
+        let inventario = JSON.parse(localStorage.getItem('inventario_gorras_v4')) || [];
+        let totalVentasReal = parseFloat(localStorage.getItem('total_ventas_real')) || 0;
+        let gananciaTotalReal = parseFloat(localStorage.getItem('ganancia_total_real_v4')) || 0;
+
+        const form = document.getElementById('inventoryForm');
+        const tabla = document.getElementById('tablaInventario');
+        const totalVentasRealEl = document.getElementById('totalVentasReal');
+        const totalGananciaRealEl = document.getElementById('totalGananciaReal');
+        const totalGorrasEl = document.getElementById('totalGorras');
+
+        function guardarTodo() {
+            localStorage.setItem('inventario_gorras_v4', JSON.stringify(inventario));
+            localStorage.setItem('total_ventas_real', totalVentasReal);
+            localStorage.setItem('ganancia_total_real_v4', gananciaTotalReal);
+            renderizar();
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const costo = parseFloat(document.getElementById('costo').value);
+            const usdtVenta = parseFloat(document.getElementById('usdtVenta').value);
+            const gananciaUnitaria = usdtVenta - costo;
+
+            const nuevaGorra = {
+                id: Date.now(),
+                nombre: document.getElementById('nombre').value,
+                stock: parseInt(document.getElementById('stock').value),
+                costo: costo,
+                usdtVenta: usdtVenta,
+                gananciaUnitaria: gananciaUnitaria,
+                estado: 'En Stock'
+            };
+
+            inventario.push(nuevaGorra);
+            form.reset();
+            document.getElementById('stock').value = 1;
+            guardarTodo();
+        });
+
+        function venderUnidad(id) {
+            const item = inventario.find(g => g.id === id);
+            if (item && item.stock > 0) {
+                item.stock -= 1;
+                
+                // Sumar al total de ventas brutas el precio de venta de esta unidad
+                totalVentasReal += item.usdtVenta;
+                
+                // Sumar a las ganancias netas la diferencia (Venta - Costo)
+                gananciaTotalReal += item.gananciaUnitaria;
+
+                if (item.stock === 0) {
+                    item.estado = 'Agotado';
+                }
+                guardarTodo();
+            }
+        }
+
+        function eliminarGorra(id) {
+            inventario = inventario.filter(g => g.id !== id);
+            guardarTodo();
+        }
+
+        function renderizar() {
+            tabla.innerHTML = '';
+            let sumaStock = 0;
+
+            inventario.forEach(item => {
+                sumaStock += item.stock;
+
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${item.stock}</td>
+                    <td><strong>${item.nombre}</strong></td>
+                    <td>${item.costo}</td>
+                    <td>${item.usdtVenta}</td>
+                    <td class="ganancia-text">+${item.gananciaUnitaria.toFixed(2)}</td>
+                    <td>${item.estado}</td>
+                    <td>
+                        <button class="btn-action btn-sell" onclick="venderUnidad(${item.id})">Vender 1</button>
+                        <button class="btn-action btn-delete" onclick="eliminarGorra(${item.id})">Eliminar</button>
+                    </td>
+                `;
+                tabla.appendChild(fila);
+            });
+
+            totalVentasRealEl.textContent = `${totalVentasReal.toFixed(2)} USDT`;
+            totalGananciaRealEl.textContent = `${gananciaTotalReal.toFixed(2)} USDT`;
+            totalGorrasEl.textContent = sumaStock;
+        }
+
+        renderizar();
+    </script>
 </body>
-</html>
+    </html>
+    
