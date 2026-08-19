@@ -99,12 +99,26 @@
             background-color: #ffffff;
             color: #000000;
         }
+        .logo-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px 0;
+    width: 100%;
+}
+
+.logo-contenedor svg {
+    width: 80px;  /* Cambia este número si quieres el logo más grande o pequeño */
+    height: auto;
+    fill: #ffffff;
+}
+        
     </style>
 </head>
 <body>
 
     <!-- CAJÓN PARA TU LOGO SVG -->
-    <div id="espacio-para-logo" style="display: none;">
+    <div id="mi-logo" style="display: none;">
         
         <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="120" height="120" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style="max-width: 120px; height: auto; display: block; margin: 0 auto;">
   <g xmlns="http://www.w3.org/2000/svg" transform="translate(0.000000,600.000000) scale(0.100000,-0.100000)" fill="#ffffff" stroke="none">
@@ -166,7 +180,12 @@
         </svg>
 
     </div>
-
+<div class="logo-contenedor">
+    <svg width="80" height="80">
+        <use href="#mi-logo" />
+    </svg>
+</div>
+    
     <!-- Elemento SVG Nativo que renderizará el fondo en GPU de alta definición -->
     <svg id="fondo-patron-svg"></svg>
 
