@@ -106,18 +106,26 @@
     left: 50%;
     transform: translateX(-50%);
     
-    width: 180px; 
-    height: 180px;
+    /* Estos son los píxeles reales del círculo */
+    width: 150px; 
+    height: 150px;
+    
     background-color: rgba(255, 255, 255, 0.15); 
     border-radius: 50%;
+    backdrop-filter: blur(5px);
     
+    /* Esto centra lo que está adentro */
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     
     z-index: 10;
     pointer-events: none;
-    backdrop-filter: blur(5px);
+    
+    /* ¡IMPORTANTE! Esto controla el tamaño del logo dentro del círculo */
+    /* Si quieres el logo más grande, baja este número a 10px o 5px */
+    padding: 25px; 
+    box-sizing: border-box;
 }
 
 /* --- LOGO SVG DENTRO DEL CÍRCULO --- */
@@ -126,11 +134,11 @@
     height: 100% !important;
     fill: #ffffff !important;
     
-    /* Zoom seguro para que crezca sin desaparecer */
-    transform: scale(1.8); 
-    transform-origin: center center !important;
+    /* ELIMINAMOS EL SCALE PARA QUE NO SE DESCENTRE */
+    transform: none !important; 
     display: block !important;
 }
+        
         
         
         
