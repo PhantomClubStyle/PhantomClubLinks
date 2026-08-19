@@ -130,14 +130,15 @@
 
 /* --- LOGO SVG DENTRO DEL CÍRCULO --- */
 .logo-destacado-svg {
-    width: 100% !important;
+    width: 100% !important; 
     height: 100% !important;
     fill: #ffffff !important;
     
-    /* ELIMINAMOS EL SCALE PARA QUE NO SE DESCENTRE */
-    transform: none !important; 
+    /* Esta es la clave: quitamos transform y usamos object-fit */
     display: block !important;
+    object-fit: contain !important; 
 }
+        
         
         
         
